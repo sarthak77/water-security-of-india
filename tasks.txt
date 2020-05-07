@@ -1,0 +1,10 @@
+Dynamic changes in the classification of water-energy regions over India
+
+I am looking for the answer to the following specific questions:
+
+1) How the water and energy zones have transformed over the years in India.
+2) A spatial and temporal change is present in the classification of water and energy zones of India?
+3) Is there any expansion or reduction in space of these classifications
+4) Any innovative thought on such analysis
+
+For this, you may have to check for each grid point the classification and some dynamic clustering algorithm should help in getting such information.
