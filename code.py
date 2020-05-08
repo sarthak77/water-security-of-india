@@ -28,7 +28,7 @@ def plot_hm(X,T):
     plt.title(T)
     # plt.show()
     # plt.savefig(T+".png")
-    plt.savefig("img/j.png")
+    plt.savefig("img/"+T+".png")
     # plt.close()
 
 
@@ -59,7 +59,7 @@ def part1():
     """
 
     MPET,MR=monthly()
-    for i in range(1):
+    for i in range(64):
         t1=MPET[:,:,i]-MR[:,:,i]
         t1[t1<0]=-1#energy limited
         t1[t1>0]=1#water limited
