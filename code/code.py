@@ -80,20 +80,19 @@ def part2():
         t1[t1<0]=-1#energy limited
         t1[t1>0]=1#water limited
         val,freq=np.unique(t1,return_counts=True)        
-        # print(np.asarray((val,freq)))
-        # print(freq[0])
         E.append(freq[0]/(freq[0]+freq[2]))
         W.append(freq[2]/(freq[0]+freq[2]))
         Y.append(1951+i)
 
-    plt.subplot(211)
-    plt.title("Percentage of Zones")
-    plt.plot(Y,E,'y',label='Energy limited')
-    plt.legend()
-    
-    plt.subplot(212)
-    plt.plot(Y,W,'b',label='Water limited')
-    plt.legend()
+    ind=np.arange(64)
+    width=1
+    p1=plt.bar(ind,E,width)
+    p2=plt.bar(ind,W,width,bottom=E)
+    plt.ylabel('Percent')
+    plt.title('Expansion/Reduction')
+    plt.xticks(ind,Y,rotation=90)
+    plt.yticks(np.arange(0,1.1,.1))
+    plt.legend((p1[0],p2[0]),('Energy Limited','Water Limited'))
     plt.show()
 
 
