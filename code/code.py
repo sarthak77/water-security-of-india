@@ -102,5 +102,5 @@ if __name__ == "__main__":
     PET,R=load_data()
     # (121, 121, 768) 64 years monthly data
 
-    # part1()
-    part2()
+    part1()
+    # part2()

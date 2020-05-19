@@ -8,3 +8,22 @@ I am looking for the answer to the following specific questions:
 4) Any innovative thought on such analysis
 
 For this, you may have to check for each grid point the classification and some dynamic clustering algorithm should help in getting such information.
+
+-------------------------------------------
+
+I would like to see a map of the classification of water-energy limited zones of India.
+I am also interested to check if there is any increase or decrease of these areas.
+
+--------------------------------------------
+
+I have gone through the figures.
+
+1) For each year you have classified the water-energy regions, which is the basic step to do.
+2) As you can see there is a change in the classification for each year, particularly, if you can notice in the North-Eastern zone. How to quantify it ?
+3) For each year there is a change in the grid points which is turning from water to energy or energy to water zones. How each grid point is changing?
+4) If it is changing from which year onwards it is changing ?
+
+
+My questions are very specific and now you have to explore the answers. some data minimg techniques should help.
+Students also read some material to have an understanding about the problem which they are solving.
+Try these two things..
