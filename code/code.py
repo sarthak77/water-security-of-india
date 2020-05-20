@@ -15,22 +15,48 @@ def load_data():
 
 
 
+def get_mask():
+    """
+    Create mask file for changing grid points
+    """
+
+    M=np.zeros(121*121*64).reshape((121,121,64))
+    MPET,MR=yearly()
+    for i in range(64):
+        t1=MPET[:,:,i]-MR[:,:,i]
+        t1[t1<0]=-1#energy limited
+        t1[t1>0]=1#water limited
+        M[:,:,i]=t1
+
+    mask=np.ones(121*121).reshape((121,121))
+
+    for i in range(121):
+        for j in range(121):
+            if np.unique(M[i][j]).size > 1:
+                mask[i][j]=0
+
+    mask=mask.transpose()
+    mask=np.flipud(mask)
+    return mask
+
+
+
 def plot_hm(X,T):
     """
     Plot heat map
     """
 
     import seaborn as sns
-    global mask
 
     X=X.transpose()
     X=np.flipud(X)
-
+    mask=get_mask()
     ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
     # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False)
     
     plt.title(T)
     # plt.show()
+    # plt.savefig("img/"+T+".png")
     plt.savefig("temp/"+T+".png")
 
 
@@ -101,7 +127,7 @@ def part2():
 
 def part3():
     """
-    Create mask file for changing grid points
+    Grid point change
     """
 
     M=np.zeros(121*121*64).reshape((121,121,64))
@@ -112,18 +138,21 @@ def part3():
         t1[t1>0]=1#water limited
         M[:,:,i]=t1
 
-    global mask
-    mask=np.ones(121*121).reshape((121,121))
-
     coor=[]#coordinates of changing points
     for i in range(121):
         for j in range(121):
             if np.unique(M[i][j]).size > 1:
+                # uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
+                # print(uniq,c)
+                # print(*ind)
                 coor.append((i,j))
-                mask[i][j]=0
 
-    mask=mask.transpose()
-    mask=np.flipud(mask)
+    a=np.random.rand(2000,64)
+    import seaborn as sns
+    ax=sns.heatmap(a,cmap="YlGnBu")
+    plt.show()
+    # plt.savefig("temp/"+T+".png")
+    pass
 
 
 
@@ -132,8 +161,6 @@ if __name__ == "__main__":
     PET,R=load_data()
     # (121, 121, 768) 64 years monthly data
 
-    mask=[]
-
-    part3()
-    part1()
+    # part1()
     # part2()
+    part3()
