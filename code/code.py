@@ -138,25 +138,18 @@ def part3():
         t1[t1>0]=1#water limited
         M[:,:,i]=t1
 
-    A=[]
-    #coordinates of changing points
-    X=[]
-    Y=[]
+    dtype=[('X',np.uint8),('Y',np.uint8),('-1',np.uint8),('1',np.uint8),('year','64int8')]
+    data=np.zeros(0,dtype=dtype)
     for i in range(121):
         for j in range(121):
             if np.unique(M[i][j]).size > 1:
                 uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
-                # print(uniq,c)
-                # print(*ind)
-                X.append(i)
-                Y.append(j)
-                A.append(ind)
+                data=np.append(data,np.array([(i,j,c[0],c[1],ind)],dtype=data.dtype))
 
     import seaborn as sns
-    plt.scatter(X,Y,s=1)
-    # ax=sns.heatmap(A,cmap="YlGnBu")
+    # plt.scatter(data['X'],data['Y'],s=1)
+    ax=sns.heatmap(data['year'],cmap="YlGnBu")
     plt.show()
-    # plt.savefig("temp/"+T+".png")
     pass
 
 
