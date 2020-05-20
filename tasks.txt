@@ -26,4 +26,12 @@ I have gone through the figures.
 
 My questions are very specific and now you have to explore the answers. some data minimg techniques should help.
 Students also read some material to have an understanding about the problem which they are solving.
-Try these two things..
+Try these two things.
+
+---------------------------------------------
+
+MY
+
+4) Any innovative thought on such analysis
+
+For this, you may have to check for each grid point the classification and some dynamic clustering algorithm should help in getting such information.

@@ -33,9 +33,9 @@ def plot_hm(X,T):
 
 
 
-def monthly():
+def yearly():
     """
-    Convert to monthly data
+    Convert to yearly data
     """
 
     MPET=np.zeros(121*121*64).reshape((121,121,64))
@@ -58,7 +58,7 @@ def part1():
     Yearly zone variation
     """
 
-    MPET,MR=monthly()
+    MPET,MR=yearly()
     for i in range(64):
         t1=MPET[:,:,i]-MR[:,:,i]
         t1[t1<0]=-1#energy limited
@@ -73,7 +73,7 @@ def part2():
     Expansion/Reduction
     """
 
-    MPET,MR=monthly()
+    MPET,MR=yearly()
     E,W,Y=[],[],[]
     for i in range(64):
         t1=MPET[:,:,i]-MR[:,:,i]
