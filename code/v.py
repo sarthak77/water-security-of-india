@@ -1,8 +1,8 @@
 import cv2
 import os
 
-image_folder = './img/'
-video_name = 'video.avi'
+image_folder = './temp/'
+video_name = 'video2.avi'
 
 images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
 images=sorted(images)
