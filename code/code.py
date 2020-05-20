@@ -138,18 +138,23 @@ def part3():
         t1[t1>0]=1#water limited
         M[:,:,i]=t1
 
-    coor=[]#coordinates of changing points
+    A=[]
+    #coordinates of changing points
+    X=[]
+    Y=[]
     for i in range(121):
         for j in range(121):
             if np.unique(M[i][j]).size > 1:
-                # uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
+                uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
                 # print(uniq,c)
                 # print(*ind)
-                coor.append((i,j))
+                X.append(i)
+                Y.append(j)
+                A.append(ind)
 
-    a=np.random.rand(2000,64)
     import seaborn as sns
-    ax=sns.heatmap(a,cmap="YlGnBu")
+    plt.scatter(X,Y,s=1)
+    # ax=sns.heatmap(A,cmap="YlGnBu")
     plt.show()
     # plt.savefig("temp/"+T+".png")
     pass
