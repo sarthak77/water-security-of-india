@@ -156,15 +156,37 @@ def part2():
 
 
 
-def zone_anal(data):
+def zone_analysis(data):
     """
     Do zonal analysis of water-energy zones 
+    0 = sea zone
+    1 = central zone
+    2 = north-east zone
+    3 = north-east-hills zone
+    4 = south zone
+    5 = J&K zone
+    6 = west  zone
+    7 = north zone
     """
 
     import seaborn as sns
-    # plt.scatter(data['X'],data['Y'],s=1)
-    ax=sns.heatmap(data['year'],cmap="YlGnBu")
-    plt.show()
+
+    for i in range(1,8,1):
+        mask=zone_mask(i)
+        mask=np.rot90(mask,k=3)
+
+        C=[]
+        for i,j in zip(data['X'],data['Y']):
+            if not mask[i][j]:
+                C.append('r')
+            else:
+                C.append('b')
+
+
+        plt.scatter(data['X'],data['Y'],s=1,c=C)
+        # ax=sns.heatmap(data['year'],cmap="YlGnBu")
+        plt.show()
+        exit(-1)
 
 
 
