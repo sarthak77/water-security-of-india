@@ -156,6 +156,22 @@ def part2():
 
 
 
+def zone_anal(data):
+    """
+    Do zonal analysis of water-energy zones 
+    """
+
+    import seaborn as sns
+    # plt.scatter(data['X'],data['Y'],s=1)
+    ax=sns.heatmap(data['year'],cmap="YlGnBu")
+    plt.show()
+
+
+
+    pass
+
+
+
 def part3():
     """
     Grid point change
@@ -177,11 +193,7 @@ def part3():
                 uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
                 data=np.append(data,np.array([(i,j,c[0],c[1],ind)],dtype=data.dtype))
 
-    import seaborn as sns
-    # plt.scatter(data['X'],data['Y'],s=1)
-    ax=sns.heatmap(data['year'],cmap="YlGnBu")
-    plt.show()
-    pass
+    zone_anal(data)
 
 
 
@@ -190,6 +202,6 @@ if __name__ == "__main__":
     PET,R=load_data()
     # (121, 121, 768) 64 years monthly data
 
-    part1()
+    # part1()
     # part2()
-    # part3()
+    part3()
