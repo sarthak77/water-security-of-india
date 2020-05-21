@@ -52,6 +52,7 @@ def zone_mask(zone):
     5 = J&K zone
     6 = west  zone
     7 = north zone
+    8 = complete mask file
     """
 
     with open('./mask/homogeneouszones.txt', 'r') as file:
@@ -66,6 +67,8 @@ def zone_mask(zone):
         temp.append(a)
 
     temp=np.array(temp)
+    if zone == 8:
+        return temp
     temp=temp == zone
     temp=np.invert(temp)
     return temp
@@ -169,28 +172,52 @@ def zone_analysis(data):
     7 = north zone
     """
 
-    import seaborn as sns
+    T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
 
+    """
     for i in range(1,8,1):
         mask=zone_mask(i)
         mask=np.rot90(mask,k=3)
 
         C=[]
-        for i,j in zip(data['X'],data['Y']):
-            if not mask[i][j]:
+        for j,k in zip(data['X'],data['Y']):
+            if not mask[j][k]:
                 C.append('r')
             else:
                 C.append('b')
 
-
         plt.scatter(data['X'],data['Y'],s=1,c=C)
-        # ax=sns.heatmap(data['year'],cmap="YlGnBu")
+        plt.title(T[i])
+        plt.savefig("images/zonal_analysis/"+T[i]+".png")
+    """
+
+    # """
+
+    
+    # Find zone of each point
+    Z=[[] for i in range(7)]
+    mask=zone_mask(8)
+    mask=np.rot90(mask,k=3)
+    for i in range(len(data)):
+        x=data[i]['X']
+        y=data[i]['Y']
+        Z[mask[x][y]-1].append(i)
+
+    # Analysis
+    import seaborn as sns
+    for i in range(7):
+        z=[]
+        for j in Z[i]:
+            z.append(data[j])
+        z=np.array(z)
+        ax=sns.heatmap(z['year'],cmap="YlGnBu")
+        plt.title(T[i+1])
         plt.show()
         exit(-1)
 
 
 
-    pass
+    # """
 
 
 
@@ -215,7 +242,7 @@ def part3():
                 uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
                 data=np.append(data,np.array([(i,j,c[0],c[1],ind)],dtype=data.dtype))
 
-    zone_anal(data)
+    zone_analysis(data)
 
 
 
