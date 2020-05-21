@@ -41,6 +41,37 @@ def get_mask():
 
 
 
+def zone_mask(zone):
+    """
+    Get mask of individual zones
+    0 = sea zone
+    1 = central zone
+    2 = north-east zone
+    3 = north-east-hills zone
+    4 = south zone
+    5 = J&K zone
+    6 = west  zone
+    7 = north zone
+    """
+
+    with open('./mask/homogeneouszones.txt', 'r') as file:
+        input_lines = [line.strip("\n") for line in file]
+
+    temp=[]
+    for l in input_lines:
+        a=[]
+        l=l.replace(" ","")
+        for i in l:
+            a.append(int(i))
+        temp.append(a)
+
+    temp=np.array(temp)
+    temp=temp == zone
+    temp=np.invert(temp)
+    return temp
+
+
+
 def plot_hm(X,T):
     """
     Plot heat map
@@ -50,14 +81,14 @@ def plot_hm(X,T):
 
     X=X.transpose()
     X=np.flipud(X)
-    mask=get_mask()
+    # mask=get_mask()#for changing grid points
+    mask=zone_mask(7)#for individual zones
     ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
     # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False)
     
     plt.title(T)
     # plt.show()
-    # plt.savefig("img/"+T+".png")
-    plt.savefig("temp/"+T+".png")
+    plt.savefig("images/zone/7/"+T+".png")
 
 
 
@@ -159,6 +190,6 @@ if __name__ == "__main__":
     PET,R=load_data()
     # (121, 121, 768) 64 years monthly data
 
-    # part1()
+    part1()
     # part2()
-    part3()
+    # part3()
