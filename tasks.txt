@@ -29,9 +29,3 @@ Students also read some material to have an understanding about the problem whic
 Try these two things.
 
 ---------------------------------------------
-
-MY
-
-4) Any innovative thought on such analysis
-
-For this, you may have to check for each grid point the classification and some dynamic clustering algorithm should help in getting such information.

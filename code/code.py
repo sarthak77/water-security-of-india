@@ -192,8 +192,6 @@ def zone_analysis(data):
     """
 
     # """
-
-    
     # Find zone of each point
     Z=[[] for i in range(7)]
     mask=zone_mask(8)
@@ -210,13 +208,14 @@ def zone_analysis(data):
         for j in Z[i]:
             z.append(data[j])
         z=np.array(z)
-        ax=sns.heatmap(z['year'],cmap="YlGnBu")
-        plt.title(T[i+1])
-        plt.show()
-        exit(-1)
 
-
-
+        ax=sns.heatmap(z['year'],xticklabels=list(range(1951,2015,1)),cmap="YlGnBu",cbar=False)
+        plt.title(T[i+1]+" Variation with year",fontsize=30)
+        ax.set_xlabel("Year",fontsize=25)
+        ax.set_ylabel("Number of Points",fontsize=25)
+        figure = plt.gcf()
+        figure.set_size_inches(32, 18)
+        plt.savefig("images/zonal_analysis/"+T[i+1]+" Variation with year"+".png")
     # """
 
 
