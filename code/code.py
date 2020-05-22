@@ -172,7 +172,32 @@ def zone_analysis(data):
     7 = north zone
     """
 
+    import matplotlib.patches as mpatches
+    import matplotlib.cm as cm
+    colors = cm.rainbow(np.linspace(0,1,8)) 
     T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
+
+    """
+    mask=zone_mask(8)
+    mask=np.rot90(mask,k=3)
+    C=[]
+    X=[]
+    Y=[]
+    for i in range(121):
+        for j in range(121):
+            X.append(i)
+            Y.append(j)
+            C.append(colors[mask[i][j]])
+
+
+    plt.scatter(X,Y,c=C)
+    plt.title("Zones in India")
+    handles=[]
+    for i in range(7):
+        handles.append(mpatches.Patch(color=colors[i+1],label=T[i+1]))
+    plt.legend(handles=handles)
+    plt.show()
+    """
 
     """
     for i in range(1,8,1):
@@ -182,16 +207,16 @@ def zone_analysis(data):
         C=[]
         for j,k in zip(data['X'],data['Y']):
             if not mask[j][k]:
-                C.append('r')
+                C.append(colors[i])
             else:
-                C.append('b')
+                C.append('black')
 
-        plt.scatter(data['X'],data['Y'],s=1,c=C)
+        plt.scatter(data['X'],data['Y'],s=8,c=C)
         plt.title(T[i])
         plt.savefig("images/zonal_analysis/"+T[i]+".png")
     """
 
-    # """
+    """
     # Find zone of each point
     Z=[[] for i in range(7)]
     mask=zone_mask(8)
@@ -216,7 +241,7 @@ def zone_analysis(data):
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
         plt.savefig("images/zonal_analysis/"+T[i+1]+" Variation with year"+".png")
-    # """
+    """
 
 
 
