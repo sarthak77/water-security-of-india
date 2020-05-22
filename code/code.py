@@ -227,13 +227,10 @@ def indi_zone_anal(colors,T,data):
     Individual zone analysis
     """
 
-    Z=get_zone(data)
-
-    for i in range(7):
-        z=[]
-        for j in Z[i]:
-            z.append(data[j])
-        z=np.array(z)
+    def year_hm(z):
+        """
+        Plot yearly zone variation
+        """
 
         ax=sns.heatmap(z['year'],xticklabels=list(range(1951,2015,1)),cmap="YlGnBu",cbar=False)
         plt.title(T[i+1]+" Variation with year",fontsize=30)
@@ -241,8 +238,20 @@ def indi_zone_anal(colors,T,data):
         ax.set_ylabel("Number of Points",fontsize=25)
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
-        # plt.show()
-        plt.savefig("images/zonal_analysis/"+T[i+1]+" Variation with year"+".png")
+        plt.show()
+        # plt.savefig("images/zonal_analysis/"+T[i+1]+" Variation with year"+".png")
+
+
+    Z=get_zone(data)
+
+    for i in range(7):
+        z=np.array([data[j] for j in Z[i]])
+        year_hm(z)
+
+
+
+
+    pass
 
 
 
