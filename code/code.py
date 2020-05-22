@@ -201,8 +201,7 @@ def plot_indi_zones(colors,T,data):
 
         plt.scatter(data['X'],data['Y'],s=8,c=C)
         plt.title(T[i])
-        # plt.show()
-        plt.savefig("images/zonal_analysis/"+T[i]+".png")
+        plt.savefig("images/zonal_analysis/"+str(i)+"/"+T[i]+".png")
 
 
 
@@ -227,26 +226,53 @@ def indi_zone_anal(colors,T,data):
     Individual zone analysis
     """
 
-    def year_hm(z):
+    def year_hm(z,t):
         """
-        Plot yearly zone variation
+        Plot yearly zone variation heat map
         """
 
+        plt.rcParams.update({'font.size': 22})
         ax=sns.heatmap(z['year'],xticklabels=list(range(1951,2015,1)),cmap="YlGnBu",cbar=False)
         plt.title(T[i+1]+" Variation with year",fontsize=30)
         ax.set_xlabel("Year",fontsize=25)
         ax.set_ylabel("Number of Points",fontsize=25)
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
-        plt.show()
-        # plt.savefig("images/zonal_analysis/"+T[i+1]+" Variation with year"+".png")
+        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Variation with year"+".png")
+        plt.close()
+
+    def year_sbc(z,t):
+        """
+        Plot yearly zone variation stacked bar chart
+        """
+
+        wl=np.sum(z['year'],axis=0)
+        el=np.subtract(np.full((64),z.shape[0]),wl)
+        ind=np.arange(64)
+        width=1
+        
+        plt.rcParams.update({'font.size': 22})
+        p1=plt.bar(ind,el,width)
+        p2=plt.bar(ind,wl,width,bottom=el)
+        plt.ylabel('Number of Points',fontsize=25)
+        plt.xlabel('Year',fontsize=25)
+        plt.title('Water-Energy Zones for '+T[i+1],fontsize=30)
+        plt.xticks(ind,list(range(1951,2015,1)),rotation=90)
+        plt.legend((p1[0],p2[0]),('Energy Limited','Water Limited'))
+        figure = plt.gcf()
+        figure.set_size_inches(32, 18)
+        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Variation with year 2"+".png")
+        plt.close()
+
 
 
     Z=get_zone(data)
 
     for i in range(7):
         z=np.array([data[j] for j in Z[i]])
-        year_hm(z)
+        year_hm(z,str(i+1)+"/")
+        year_sbc(z,str(i+1)+"/")
+
 
 
 
