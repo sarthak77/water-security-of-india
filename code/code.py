@@ -228,7 +228,7 @@ def indi_zone_anal(colors,T,data):
 
     def year_hm(z,t):
         """
-        Plot yearly zone variation heat map
+        Plot yearly grid point variation
         """
 
         plt.rcParams.update({'font.size': 22})
@@ -238,7 +238,7 @@ def indi_zone_anal(colors,T,data):
         ax.set_ylabel("Number of Points",fontsize=25)
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
-        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Variation with year"+".png")
+        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Yearly grid point variation"+".png")
         plt.close()
 
     def year_sbc(z,t):
@@ -261,7 +261,7 @@ def indi_zone_anal(colors,T,data):
         plt.legend((p1[0],p2[0]),('Energy Limited','Water Limited'))
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
-        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Variation with year 2"+".png")
+        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Yearly zone variation"+".png")
         plt.close()
 
 
