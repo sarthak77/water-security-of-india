@@ -1,6 +1,9 @@
+from scipy.io import loadmat
 import numpy as np
 import matplotlib.pyplot as plt
-
+import matplotlib.patches as mpatches
+import matplotlib.cm as cm
+import seaborn as sns
 
 
 def load_data():
@@ -8,7 +11,6 @@ def load_data():
     Return data in np format
     """
 
-    from scipy.io import loadmat
     f1='Datasets/PET_India.mat'
     f2='Datasets/rain_India.mat'
     return(loadmat(f1)['PET'],loadmat(f2)['rain'])
@@ -79,8 +81,6 @@ def plot_hm(X,T):
     """
     Plot heat map
     """
-
-    import seaborn as sns
 
     X=X.transpose()
     X=np.flipud(X)
@@ -159,36 +159,19 @@ def part2():
 
 
 
-def zone_analysis(data):
+def plot_india_zone(colors,T):
     """
-    Do zonal analysis of water-energy zones 
-    0 = sea zone
-    1 = central zone
-    2 = north-east zone
-    3 = north-east-hills zone
-    4 = south zone
-    5 = J&K zone
-    6 = west  zone
-    7 = north zone
+    Plot zones of India
     """
 
-    import matplotlib.patches as mpatches
-    import matplotlib.cm as cm
-    colors = cm.rainbow(np.linspace(0,1,8)) 
-    T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
-
-    """
     mask=zone_mask(8)
     mask=np.rot90(mask,k=3)
-    C=[]
-    X=[]
-    Y=[]
+    C,X,Y=[[],[],[]]
     for i in range(121):
         for j in range(121):
             X.append(i)
             Y.append(j)
             C.append(colors[mask[i][j]])
-
 
     plt.scatter(X,Y,c=C)
     plt.title("Zones in India")
@@ -197,9 +180,14 @@ def zone_analysis(data):
         handles.append(mpatches.Patch(color=colors[i+1],label=T[i+1]))
     plt.legend(handles=handles)
     plt.show()
+
+
+
+def plot_indi_zones(colors,T,data):
+    """
+    Plot individual zones on map of India
     """
 
-    """
     for i in range(1,8,1):
         mask=zone_mask(i)
         mask=np.rot90(mask,k=3)
@@ -213,11 +201,16 @@ def zone_analysis(data):
 
         plt.scatter(data['X'],data['Y'],s=8,c=C)
         plt.title(T[i])
+        # plt.show()
         plt.savefig("images/zonal_analysis/"+T[i]+".png")
+
+
+
+def get_zone(data):
+    """
+    Return zone of each point
     """
 
-    """
-    # Find zone of each point
     Z=[[] for i in range(7)]
     mask=zone_mask(8)
     mask=np.rot90(mask,k=3)
@@ -225,9 +218,17 @@ def zone_analysis(data):
         x=data[i]['X']
         y=data[i]['Y']
         Z[mask[x][y]-1].append(i)
+    return Z
 
-    # Analysis
-    import seaborn as sns
+
+
+def indi_zone_anal(colors,T,data):
+    """
+    Individual zone analysis
+    """
+
+    Z=get_zone(data)
+
     for i in range(7):
         z=[]
         for j in Z[i]:
@@ -240,8 +241,30 @@ def zone_analysis(data):
         ax.set_ylabel("Number of Points",fontsize=25)
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
+        # plt.show()
         plt.savefig("images/zonal_analysis/"+T[i+1]+" Variation with year"+".png")
+
+
+
+def zone_analysis(data):
     """
+    Do zonal analysis of water-energy zones 
+    0 = sea zone
+    1 = central zone
+    2 = north-east zone
+    3 = north-east-hills zone
+    4 = south zone
+    5 = J&K zone
+    6 = west  zone
+    7 = north zone
+    """
+
+    colors = cm.rainbow(np.linspace(0,1,8)) 
+    T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
+
+    # plot_india_zone(colors,T)
+    # plot_indi_zones(colors,T,data)
+    indi_zone_anal(colors,T,data)
 
 
 
