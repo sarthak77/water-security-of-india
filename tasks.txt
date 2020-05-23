@@ -29,3 +29,19 @@ Students also read some material to have an understanding about the problem whic
 Try these two things.
 
 ---------------------------------------------
+
+For every zone there is 2 types of analysis
+
+Year based analysis of zones
+----------------------------
+zone types in each year
+number of points changing zones in each year [bar chart] [global + zonal]
+
+
+
+Grid point based analysis of zones
+----------------------------------
+zone types at each point
+number of years in which a point switches zones [heat map] [global +zonal]
+
+
