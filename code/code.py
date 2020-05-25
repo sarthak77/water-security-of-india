@@ -34,7 +34,7 @@ def get_mask():
 
     for i in range(121):
         for j in range(121):
-            if np.unique(M[i][j]).size > 1:
+            if np.unique(M[i][j]).size > 1 or not np.all(M[i][j]):
                 mask[i][j]=0
 
     mask=mask.transpose()
@@ -71,28 +71,31 @@ def zone_mask(zone):
     temp=np.array(temp)
     if zone == 8:
         return temp
-    temp=temp == zone
+    temp[temp==0]=zone
+    temp=temp == zone 
     temp=np.invert(temp)
     return temp
 
 
 
-def plot_hm(X,T,zone=0):
+def plot_hm(X,t,zone=7):
     """
     Plot heat map
     """
 
+    global T
     X=X.transpose()
     X=np.flipud(X)
     # mask=get_mask()#for changing grid points
     mask=zone_mask(zone)#for individual zones
-    # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
-    ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",mask=mask)
+    ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
+    # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",mask=mask)
     # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False)
     
-    plt.title(T)
+    plt.title(t+" for "+T[zone])
     # plt.show()
-    plt.savefig("images/zonal_analysis/"+str(zone)+"/"+T+".png")
+    # exit(-1)
+    plt.savefig("images/zone/"+str(zone)+"/"+t+".png")
     plt.close()
 
 
@@ -399,6 +402,6 @@ if __name__ == "__main__":
     # (121, 121, 768) 64 years monthly data
 
     T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
-    # part1()
+    part1()
     # part2()
-    part3()
+    # part3()
