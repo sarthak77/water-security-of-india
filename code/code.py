@@ -34,7 +34,8 @@ def get_mask():
 
     for i in range(121):
         for j in range(121):
-            if np.unique(M[i][j]).size > 1 or not np.all(M[i][j]):
+            # if np.unique(M[i][j]).size > 1 or not np.all(M[i][j]):
+            if np.unique(M[i][j]).size > 1:
                 mask[i][j]=0
 
     mask=mask.transpose()
@@ -78,7 +79,7 @@ def zone_mask(zone):
 
 
 
-def plot_hm(X,t,zone=7):
+def plot_hm(X,t,zone=0):
     """
     Plot heat map
     """
@@ -88,14 +89,14 @@ def plot_hm(X,t,zone=7):
     X=np.flipud(X)
     # mask=get_mask()#for changing grid points
     mask=zone_mask(zone)#for individual zones
-    ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
-    # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",mask=mask)
+    # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
+    ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",mask=mask)
     # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False)
     
-    plt.title(t+" for "+T[zone])
+    plt.title(t)
     # plt.show()
     # exit(-1)
-    plt.savefig("images/zone/"+str(zone)+"/"+t+".png")
+    plt.savefig("images/zonal_analysis/"+str(zone)+"/"+t+".png")
     plt.close()
 
 
@@ -327,8 +328,8 @@ def part3():
                 uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
                 data=np.append(data,np.array([(i,j,c[0],c[1],ind)],dtype=data.dtype))
 
-    zone_analysis(data)
-    # zyv(data)
+    # zone_analysis(data)
+    zyv(data)
     # gpv(data)
 
 
@@ -346,9 +347,9 @@ def gpv(data):
                 if i['year'][j] != i['year'][j-1]:
                     t[i['X']][i['Y']]+=1
 
-    # plot_hm(t,"Gird point varaition in India")
+    # plot_hm(t,"Frequency of gird point varaition in India")
     for i in range(1,8,1):
-        plot_hm(t,"Gird point varaition in "+T[i],i)
+        plot_hm(t,"Frequency of gird point varaition in "+T[i],i)
 
 
 
@@ -376,17 +377,18 @@ def zyv(data):
                     if i['year'][j] != i['year'][j-1]:
                         Y[j-1]+=1
 
+        Y=np.true_divide(Y,d.shape[0])
         plt.rcParams.update({'font.size': 22})
         plt.bar(X,Y,tick_label=X)
         plt.xlabel("Year",fontsize=25)
-        plt.ylabel("Number of Points",fontsize=25)
+        plt.ylabel("Percent of total Points",fontsize=25)
         plt.xticks(rotation=90)
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
 
-        # if ind == 0:
-            # plt.title("Yearly change of grid point in India",fontsize=30)
-            # plt.savefig("images/india/"+"Yearly change of grid points in "+"India"+".png")
+        if ind == 0:
+            plt.title("Yearly change of grid point in India",fontsize=30)
+            plt.savefig("images/india/"+"Yearly change of grid points in "+"India"+".png")
         if ind:
             plt.title("Yearly change of grid point in "+T[ind],fontsize=30)
             plt.savefig("images/zonal_analysis/"+str(ind)+"/Yearly change of grid points in "+T[ind]+".png")
