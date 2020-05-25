@@ -155,8 +155,8 @@ def part2():
     width=1
     p1=plt.bar(ind,E,width)
     p2=plt.bar(ind,W,width,bottom=E)
-    plt.ylabel('Percent')
-    plt.title('Expansion/Reduction')
+    plt.ylabel('Percent of Grid Points')
+    plt.title('Water-Energy Zones for India')
     plt.xticks(ind,Y,rotation=90)
     plt.yticks(np.arange(0,1.1,.1))
     plt.legend((p1[0],p2[0]),('Energy Limited','Water Limited'))
@@ -238,11 +238,12 @@ def indi_zone_anal(colors,T,data):
 
         plt.rcParams.update({'font.size': 22})
         ax=sns.heatmap(z['year'],xticklabels=list(range(1951,2015,1)),cmap="YlGnBu",cbar=False)
-        plt.title(T[i+1]+" Variation with year",fontsize=30)
+        plt.title(T[i+1]+": Individual grid point variation with year",fontsize=30)
         ax.set_xlabel("Year",fontsize=25)
         ax.set_ylabel("Number of Points",fontsize=25)
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
+        # plt.show()
         plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Yearly grid point variation"+".png")
         plt.close()
 
@@ -252,20 +253,23 @@ def indi_zone_anal(colors,T,data):
         """
 
         wl=np.sum(z['year'],axis=0)
-        el=np.subtract(np.full((64),z.shape[0]),wl)
+        wl=np.true_divide(wl,z.shape[0])
+        el=np.subtract(np.full((64),1),wl)
+
         ind=np.arange(64)
         width=1
         
         plt.rcParams.update({'font.size': 22})
         p1=plt.bar(ind,el,width)
         p2=plt.bar(ind,wl,width,bottom=el)
-        plt.ylabel('Number of Points',fontsize=25)
+        plt.ylabel('Percent of Grid Points',fontsize=25)
         plt.xlabel('Year',fontsize=25)
         plt.title('Water-Energy Zones for '+T[i+1],fontsize=30)
         plt.xticks(ind,list(range(1951,2015,1)),rotation=90)
         plt.legend((p1[0],p2[0]),('Energy Limited','Water Limited'))
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
+        # plt.show()
         plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Yearly zone variation"+".png")
         plt.close()
 
@@ -277,12 +281,6 @@ def indi_zone_anal(colors,T,data):
         z=np.array([data[j] for j in Z[i]])
         year_hm(z,str(i+1)+"/")
         year_sbc(z,str(i+1)+"/")
-
-
-
-
-
-    pass
 
 
 
@@ -329,8 +327,8 @@ def part3():
                 uniq,ind,c=np.unique(M[i][j],return_inverse=True,return_counts=True)
                 data=np.append(data,np.array([(i,j,c[0],c[1],ind)],dtype=data.dtype))
 
-    # zone_analysis(data)
-    zyv(data)
+    zone_analysis(data)
+    # zyv(data)
     # gpv(data)
 
 
@@ -402,6 +400,6 @@ if __name__ == "__main__":
     # (121, 121, 768) 64 years monthly data
 
     T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
-    part1()
+    # part1()
     # part2()
-    # part3()
+    part3()
