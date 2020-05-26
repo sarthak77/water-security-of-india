@@ -90,14 +90,16 @@ def plot_hm(X,t,zone=0):
     # mask=get_mask()#for changing grid points
     mask=zone_mask(zone)#for individual zones
     # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False,mask=mask)
-    ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",mask=mask)
+    ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",vmin=0,vmax=10)
+    # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",mask=mask)
     # ax=sns.heatmap(X,xticklabels=False,yticklabels=False,cmap="YlGnBu",cbar=False)
     
     plt.title(t)
-    # plt.show()
-    # exit(-1)
-    plt.savefig("images/zonal_analysis/"+str(zone)+"/"+t+".png")
-    plt.close()
+    plt.show()
+    exit(-1)
+    # plt.savefig("images/temp/"+t+".png")
+    # plt.savefig("images/zonal_analysis/"+str(zone)+"/"+t+".png")
+    # plt.close()
 
 
 
@@ -396,6 +398,27 @@ def zyv(data):
 
 
 
+def part4():
+    """
+    Aridity Analysis
+    """
+
+    MPET,MR=yearly()
+    MR[MR==0]=1
+    for i in range(64):
+        # t1=MPET[:,:,i]-MR[:,:,i]
+        # t1[t1<0]=-1#energy limited
+        # t1[t1>0]=1#water limited
+        t1=np.divide(MPET[:,:,i],MR[:,:,i])
+        T="Water-Energy Zones For Year "+str(1951+i)
+        plot_hm(t1,T)
+
+
+
+    pass
+
+
+
 if __name__ == "__main__":
     
     PET,R=load_data()
@@ -405,3 +428,4 @@ if __name__ == "__main__":
     # part1()
     # part2()
     part3()
+    part4()
