@@ -332,8 +332,9 @@ def part3():
                 data=np.append(data,np.array([(i,j,c[0],c[1],ind)],dtype=data.dtype))
 
     # zone_analysis(data)
-    zyv(data)
+    # zyv(data)
     # gpv(data)
+    return data
 
 
 
@@ -399,7 +400,7 @@ def zyv(data):
 
 
 
-def plots(P,PET,R,T):
+def plots(P,PET,R,T,zone=0):
     """
     sdsdsds
     """
@@ -414,7 +415,8 @@ def plots(P,PET,R,T):
     grid_kws = {"height_ratios": (.9, .03), "hspace": .3}
     fig,axes=plt.subplots(2,3,gridspec_kw=grid_kws)
     fig.suptitle(T)
-    M=np.invert(np.array(args[0],dtype=bool))
+    # M=np.invert(np.array(args[0],dtype=bool))
+    M=zone_mask(zone)
 
     sns.heatmap(args[0],xticklabels=False,yticklabels=False,cmap="YlGnBu",ax=axes[0,0],cbar_ax=axes[1,0],cbar_kws={"orientation":"horizontal"},mask=M,vmin=0,vmax=200)
     sns.heatmap(args[1],xticklabels=False,yticklabels=False,cmap="YlGnBu",ax=axes[0,1],cbar_ax=axes[1,1],cbar_kws={"orientation":"horizontal"},mask=M,vmin=120,vmax=150)
@@ -429,7 +431,7 @@ def plots(P,PET,R,T):
 
     # plt.show()
     # exit(-1)
-    plt.savefig("images/temp/"+T+".png")
+    plt.savefig("images/aridity/"+str(zone)+"/"+T+".png")
 
 
 
@@ -497,6 +499,40 @@ def Petit(PET,P):
 
 
 
+def Petitz(zone,PET,P):
+    """
+    Petit test for zonal data
+    """
+
+    data=part3()
+    Z=get_zone(data)
+    z=np.array([data[j] for j in Z[zone-1]])
+
+    # For PET
+    d1={0:0}
+    x=np.array([i>j for i in range(64) for j in range(64)]).reshape((64,64))
+    for i,j in zip(z['X'],z['Y']):
+        t=PT(PET[i][j],1951,x)
+        if t in d1.keys():
+            d1[t]+=1
+        else:
+            d1[t]=1
+
+    # For P
+    d2={0:0}
+    x=np.array([i>j for i in range(64) for j in range(64)]).reshape((64,64))
+    for i,j in zip(z['X'],z['Y']):
+        t=PT(P[i][j],1951,x)
+        if t in d2.keys():
+            d2[t]+=1
+        else:
+            d2[t]=1
+
+    print(d1)
+    print(d2)
+
+
+
 def part4():
     """
     Aridity Analysis
@@ -504,30 +540,35 @@ def part4():
 
     MPET,MR=yearly()
     # y=Petit(MPET,MR)
-    y=1964-1951
+    # y=Petitz(7,MPET,MR)#for zonal data
+    # y=1964 for India
+    CP=[2009,2013,1969,2011,1986,1985,1964]
+    
+    for i in range(len(CP)):
+        y=CP[i]-1951
 
-    t1=np.sum(MR[:,:,0:y],axis=2)
-    t1=np.true_divide(t1,12*y)
+        t1=np.sum(MR[:,:,0:y],axis=2)
+        t1=np.true_divide(t1,12*y)
 
-    t2=np.sum(MPET[:,:,0:y],axis=2)
-    t2=np.true_divide(t2,12*y)
+        t2=np.sum(MPET[:,:,0:y],axis=2)
+        t2=np.true_divide(t2,12*y)
 
-    t=copy.deepcopy(t1)
-    t[t==0]=1
-    t=np.divide(t2,t)
-    plots(t1,t2,t,"Before 1964")
+        t=copy.deepcopy(t1)
+        t[t==0]=1
+        t=np.divide(t2,t)
+        plots(t1,t2,t,"Before "+str(1951+y),i+1)
 
 
-    t1=np.sum(MR[:,:,y:],axis=2)
-    t1=np.true_divide(t1,12*(64-y))
+        t1=np.sum(MR[:,:,y:],axis=2)
+        t1=np.true_divide(t1,12*(64-y))
 
-    t2=np.sum(MPET[:,:,y:],axis=2)
-    t2=np.true_divide(t2,12*(64-y))
+        t2=np.sum(MPET[:,:,y:],axis=2)
+        t2=np.true_divide(t2,12*(64-y))
 
-    t=copy.deepcopy(t1)
-    t[t==0]=1
-    t=np.divide(t2,t)
-    plots(t1,t2,t,"After 1964")
+        t=copy.deepcopy(t1)
+        t[t==0]=1
+        t=np.divide(t2,t)
+        plots(t1,t2,t,"After "+str(1951+y),i+1)
 
 
 
