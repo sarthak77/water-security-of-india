@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import matplotlib.cm as cm
 import seaborn as sns
+import copy
 
 
 def load_data():
@@ -398,24 +399,135 @@ def zyv(data):
 
 
 
+def plots(P,PET,R,T):
+    """
+    sdsdsds
+    """
+
+    args=[]
+    for i in [P,PET,R]:
+        t=np.transpose(i)
+        t=np.flipud(t)
+        args.append(t)
+
+    plt.rcParams.update({'font.size': 22})
+    grid_kws = {"height_ratios": (.9, .03), "hspace": .3}
+    fig,axes=plt.subplots(2,3,gridspec_kw=grid_kws)
+    fig.suptitle(T)
+    M=np.invert(np.array(args[0],dtype=bool))
+
+    sns.heatmap(args[0],xticklabels=False,yticklabels=False,cmap="YlGnBu",ax=axes[0,0],cbar_ax=axes[1,0],cbar_kws={"orientation":"horizontal"},mask=M,vmin=0,vmax=200)
+    sns.heatmap(args[1],xticklabels=False,yticklabels=False,cmap="YlGnBu",ax=axes[0,1],cbar_ax=axes[1,1],cbar_kws={"orientation":"horizontal"},mask=M,vmin=120,vmax=150)
+    sns.heatmap(args[2],xticklabels=False,yticklabels=False,cmap="YlGnBu",ax=axes[0,2],cbar_ax=axes[1,2],cbar_kws={"orientation":"horizontal"},mask=M,vmin=0,vmax=6)
+
+    axes[0,0].set_title("P")
+    axes[0,1].set_title("PET")
+    axes[0,2].set_title("PET/P")
+
+    figure = plt.gcf()
+    figure.set_size_inches(32, 18)
+
+    # plt.show()
+    # exit(-1)
+    plt.savefig("images/temp/"+T+".png")
+
+
+
+def PT(X,Y,b1):
+    """
+    Return change point for array X using pettitt test
+    """
+
+    n=X.shape[0]
+    CP=[]
+    for i in range(n):
+        b2=np.array([j%64<i for j in range(64*64)]).reshape((64,64))
+        b3=np.multiply(b1,b2)
+        ret=0
+        t1=X[:,None]>X
+        t2=np.multiply(b3,t1)
+        ret+=np.sum(t2)
+        t1=X[:,None]<X
+        t2=np.multiply(b3,t1)
+        ret-=np.sum(t2)
+        CP.append(ret)
+    
+    T=np.argmax(CP)
+    K=CP[T]
+    sl=0.5#define significance level
+    t=64
+    p=2*np.exp(-6*K**2/(t**3+t**2))
+
+    if(p<sl):
+        return T+Y
+    else:
+        return 0
+
+
+
+def Petit(PET,P):
+    """
+    Calculate change point using petit test
+    """
+
+    # For PET
+    d1={0:0}
+    x=np.array([i>j for i in range(64) for j in range(64)]).reshape((64,64))
+    for i in range(121):
+        for j in range(121):
+            t=PT(PET[i][j],1951,x)
+            if t in d1.keys():
+                d1[t]+=1
+            else:
+                d1[t]=1
+
+    # For P
+    d2={0:0}
+    x=np.array([i>j for i in range(64) for j in range(64)]).reshape((64,64))
+    for i in range(121):
+        for j in range(121):
+            t=PT(P[i][j],1951,x)
+            if t in d2.keys():
+                d2[t]+=1
+            else:
+                d2[t]=1
+
+    print(d1)
+    print(d2)
+
+
+
 def part4():
     """
     Aridity Analysis
     """
 
     MPET,MR=yearly()
-    MR[MR==0]=1
-    for i in range(64):
-        # t1=MPET[:,:,i]-MR[:,:,i]
-        # t1[t1<0]=-1#energy limited
-        # t1[t1>0]=1#water limited
-        t1=np.divide(MPET[:,:,i],MR[:,:,i])
-        T="Water-Energy Zones For Year "+str(1951+i)
-        plot_hm(t1,T)
+    # y=Petit(MPET,MR)
+    y=1964-1951
+
+    t1=np.sum(MR[:,:,0:y],axis=2)
+    t1=np.true_divide(t1,12*y)
+
+    t2=np.sum(MPET[:,:,0:y],axis=2)
+    t2=np.true_divide(t2,12*y)
+
+    t=copy.deepcopy(t1)
+    t[t==0]=1
+    t=np.divide(t2,t)
+    plots(t1,t2,t,"Before 1964")
 
 
+    t1=np.sum(MR[:,:,y:],axis=2)
+    t1=np.true_divide(t1,12*(64-y))
 
-    pass
+    t2=np.sum(MPET[:,:,y:],axis=2)
+    t2=np.true_divide(t2,12*(64-y))
+
+    t=copy.deepcopy(t1)
+    t[t==0]=1
+    t=np.divide(t2,t)
+    plots(t1,t2,t,"After 1964")
 
 
 
@@ -427,5 +539,5 @@ if __name__ == "__main__":
     T={1:"Central Zone",2:"North East Zone",3:"North Eastern Hills Zone",4:"South Zone",5:"J&K Zone",6:"West Zone",7:"North Zone"}
     # part1()
     # part2()
-    part3()
+    # part3()
     part4()
