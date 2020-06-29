@@ -12,8 +12,8 @@ def load_data():
     Return data in np format
     """
 
-    f1='Datasets/PET_India.mat'
-    f2='Datasets/rain_India.mat'
+    f1='water-security-of-india/code/Datasets/PET_India.mat'
+    f2='water-security-of-india/code/Datasets/rain_India.mat'
     return(loadmat(f1)['PET'],loadmat(f2)['rain'])
 
 
@@ -59,7 +59,7 @@ def zone_mask(zone):
     8 = complete mask file
     """
 
-    with open('./mask/homogeneouszones.txt', 'r') as file:
+    with open('water-security-of-india/code/mask/homogeneouszones.txt', 'r') as file:
         input_lines = [line.strip("\n") for line in file]
 
     temp=[]
@@ -210,7 +210,7 @@ def plot_indi_zones(colors,T,data):
 
         plt.scatter(data['X'],data['Y'],s=8,c=C)
         plt.title(T[i])
-        plt.savefig("images/zonal_analysis/"+str(i)+"/"+T[i]+".png")
+        plt.savefig("water-security-of-india/code/images/zonal_analysis/"+str(i)+"/"+T[i]+".png")
 
 
 
@@ -248,7 +248,7 @@ def indi_zone_anal(colors,T,data):
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
         # plt.show()
-        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Yearly grid point variation"+".png")
+        plt.savefig("water-security-of-india/code/images/zonal_analysis/"+t+T[i+1]+" Yearly grid point variation"+".png")
         plt.close()
 
     def year_sbc(z,t):
@@ -274,7 +274,7 @@ def indi_zone_anal(colors,T,data):
         figure = plt.gcf()
         figure.set_size_inches(32, 18)
         # plt.show()
-        plt.savefig("images/zonal_analysis/"+t+T[i+1]+" Yearly zone variation"+".png")
+        plt.savefig("water-security-of-india/code/images/zonal_analysis/"+t+T[i+1]+" Yearly zone variation"+".png")
         plt.close()
 
 
