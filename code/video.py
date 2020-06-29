@@ -1,7 +1,7 @@
 import cv2
 import os
 
-image_folder = './images/zone/7'
+image_folder = 'water-security-of-india/code//images/zone/7'
 video_name = 'Zone7.avi'
 
 images = [img for img in os.listdir(image_folder) if img.endswith(".png")]
