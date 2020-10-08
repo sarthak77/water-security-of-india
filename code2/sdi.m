@@ -4,8 +4,8 @@ clc;
 %%%% and the 3rd dimension is monthly data
 
 %% Loading the data %%
-R = load("rain_India.mat");
-PET = load("PET_India.mat");
+R = load("Datasets/rain_India.mat");
+PET = load("Datasets/PET_India.mat");
 R = R.rain;
 PET = PET.PET;
 
