@@ -1,6 +1,6 @@
 clc;
 %%%% Following code is the implementation of SDI for two 3-D matrices where
-%%%% the 1st and 2nd dimensions of the matrices are the coordinates of a point
+%%%% the 1st and 2nd dimensions of the matrices are the x-coordinate and y-coordinate respectively
 %%%% and the 3rd dimension is monthly data
 
 %% Loading the data %%
@@ -26,25 +26,28 @@ for i=1:64  %year
 end
 
 %% Calculating Surplus and Deficiency %%
-SurINT = zeros(121,121);    %declare matrix of size 121x121 for storing Surplus intensity
-DT = zeros(121,121);    %declare matrix of size 121x121 for storing Deficit time
+for i = 1:121 %x-coordinate
+   for j = 1:121 %y-coordinate
+        for k = 1:64 %year
 
-for i=1:121 %x coordinate
-    for j=1:121 %y coordinate
-        SurINT_st1 = MR(i,j,:) - MPET(i,j,:);   %First step to calculate SurINT, precipitation-et0
-        SurINT_st1(SurINT_st1<0) = NaN; %remove all negative or deficit values
-        SurINT(i,j) = nanmean(SurINT_st1);  %SurINT for each coordinate over all the years
-        
-        DT_st1 = MPET(i,j,:) - MR(i,j,:);   %First step to calculate DT, et0-precipitation
-        DT_st1(DT_st1<0) = NaN;  %remove all negative or surplus values
-        DT(i,j) = nanmean(DT_st1);  %DT for each coordinate over all the years
-        
-        
+     pcp_pet = squeeze(MPET(i,j,k)) - squeeze(MR(i,j,k)); %precipitation - eto for every grid node, month, and year
+     pet_pcp = squeeze(MR(i,j,k))- squeeze(MPET(i,j,k)); %eto- precipitation for every grid node, month, and year
+
+     SurINT_step1 =  pcp_pet; %define the first step to calculate SurINT
+     SurINT_step1 (SurINT_step1 < 0) = NaN;  %remove all negative (or deficit values)
+     SurINT(i,j,k) = nanmean(SurINT_step1); %calculate SurINT for each year
+    
+     DT_step1 = pet_pcp; %define the first step to calculate DT
+     DT_step1(DT_step1> 0) = 0; % set the deficit values to zero
+     f = find(diff([1,transpose(squeeze(DT_step1)),1]==0));%first the starting point and end point of each deficit time period within an indvidual year
+     p = f(1:2:end-1);  % first the starting point each deficit time period within an individual year
+     DT(i,j,k)= nanmean(f(2:2:end)-p); %takes the mean of the deficit time duration for each event for an individual year
+        end
     end
 end
 
-SurINT_z = zscore(SurINT); %z-score of SurINT
-DT_z = zscore(DT); %z-score of DT
+SurINT_z= zscore(SurINT,[],3); %calculates z-score of SurINT for the entire time period
+DT_z = zscore(DT,[],3);  %calculates z-score of DT for the entire time period
 
-SDI_st1 = (DT_z + SurINT_z);    %top part of SDI equation
-SDI = SDI_st1/std((DT_z+SurINT_z)); %Final SDI
+SDI_step1 = (DT_z+ SurINT_z); %top of Equation 1 
+SDI = SDI_step1./std((DT_z+ SurINT_z),[],3);  %calculates SDI for the entire time period
